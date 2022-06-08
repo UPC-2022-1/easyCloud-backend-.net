@@ -17,11 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers" />
     <Folder Include="Quote\Persistence" />
     <Folder Include="Quote\Services" />
-    <Folder Include="Provider\Persistence" />
-    <Folder Include="Provider\Services" />
     <Folder Include="Record\Persistence" />
     <Folder Include="Record\Services" />
     <Folder Include="User\Persistence" />
