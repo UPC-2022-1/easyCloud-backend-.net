@@ -1,3 +1,12 @@
+using easyCloud.Quote.Domain.Repositories;
+using easyCloud.Quote.Domain.Services;
+using easyCloud.Quote.Persistence.Repositories;
+using easyCloud.Quote.Services;
+using easyCloud.User.Domain.Repositories;
+using easyCloud.User.Domain.Services;
+using easyCloud.User.Persistence.Repositories;
+using easyCloud.User.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +15,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IQuoteRepository, QuoteRepository>();
+builder.Services.AddScoped<IQuoteService, QuoteService>();
 
 var app = builder.Build();
 

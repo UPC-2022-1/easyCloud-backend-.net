@@ -7,4 +7,7 @@ public interface IQuoteRepository
     Task<Models.Quote> FindByIdAsync(int quoteId);
     void Update(Models.Quote quote);
     void Remove(Models.Quote quote);
+    Task<Models.Quote> FindByDateAsync(string date);
+    Task<Models.Quote> FindByTitleAsync(string title);
+
 }
