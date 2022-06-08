@@ -1,3 +1,7 @@
+using easyCloud.Provider.Domain.Repositories;
+using easyCloud.Provider.Domain.Services;
+using easyCloud.Provider.Persistence.Repositories;
+using easyCloud.Provider.Services;
 using easyCloud.Quote.Domain.Repositories;
 using easyCloud.Quote.Domain.Services;
 using easyCloud.Quote.Persistence.Repositories;
@@ -27,7 +31,8 @@ builder.Services.AddScoped<IQuoteRepository, QuoteRepository>();
 builder.Services.AddScoped<IQuoteService, QuoteService>();
 builder.Services.AddScoped<IRecordService, RecordService>();
 builder.Services.AddScoped<IRecordRepository, RecordRepository>();
-
+builder.Services.AddScoped<IProviderRepository, ProviderRepository>();
+builder.Services.AddScoped<IProviderService, ProviderService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
