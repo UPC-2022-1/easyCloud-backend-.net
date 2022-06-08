@@ -5,7 +5,9 @@ namespace easyCloud.Shared.Persistence.Contexts;
 public class AppDbContext : DbContext
 {
     public DbSet<User.Domain.Models.User> Users { get; set; }
-
+    public DbSet<Record.Domain.Models.Record> Records { get; set; }
+    public DbSet<Quote.Domain.Models.Quote> Quotes { get; set; }
+    
     private readonly IConfiguration _configuration;
         
     public AppDbContext(DbContextOptions options, IConfiguration configuration) : base(options)
@@ -29,5 +31,14 @@ public class AppDbContext : DbContext
         builder.Entity<User.Domain.Models.User>().Property(p => p.Phone).IsRequired();
         builder.Entity<User.Domain.Models.User>().Property(p => p.Email).IsRequired().HasMaxLength(60);
         builder.Entity<User.Domain.Models.User>().Property(p => p.Password).IsRequired().HasMaxLength(30);
+        builder.Entity<Quote.Domain.Models.Quote>().ToTable("Quotes");
+        builder.Entity<Quote.Domain.Models.Quote>().HasKey(p => p.Id);
+        builder.Entity<Quote.Domain.Models.Quote>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<Quote.Domain.Models.Quote>().Property(p => p.Date).IsRequired();
+        builder.Entity<Quote.Domain.Models.Quote>().Property(p => p.Description).IsRequired().HasMaxLength(500);
+        builder.Entity<Quote.Domain.Models.Quote>().Property(p => p.Price).IsRequired().HasMaxLength(5);
+        builder.Entity<Quote.Domain.Models.Quote>().Property(p => p.CloudService).IsRequired().HasMaxLength(20);
+        builder.Entity<Quote.Domain.Models.Quote>().Property(p => p.Title).IsRequired().HasMaxLength(20);
+        builder.Entity<Quote.Domain.Models.Quote>().Property(p => p.UserId).IsRequired();
     }
 }
