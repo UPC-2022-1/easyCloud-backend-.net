@@ -25,7 +25,6 @@
     <Folder Include="Record\Persistence" />
     <Folder Include="Record\Services" />
     <Folder Include="User\Persistence" />
-    <Folder Include="User\Services" />
   </ItemGroup>
 
 </Project>
