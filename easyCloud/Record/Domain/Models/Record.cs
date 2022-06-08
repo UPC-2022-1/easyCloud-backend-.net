@@ -2,6 +2,7 @@ namespace easyCloud.Record.Domain.Models;
 
 public class Record
 {
+    public int Id { get; set; }
     public int UserId { get; set; }
     public int QuoteId { get; set; }
     public int ProviderId { get; set; }
