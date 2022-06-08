@@ -7,7 +7,7 @@ public class Record
     public int ProviderId { get; set; }
     public int Id { get; set; }
     
-    public Quote.Domain.Models.Quote Quote { get; set; }
-    public User.Domain.Models.User User { get; set; }
-    public Provider.Domain.Models.Provider Provider { get; set; }
+    //public Quote.Domain.Models.Quote Quote { get; set; }
+    //public User.Domain.Models.User User { get; set; }
+    //public Provider.Domain.Models.Provider Provider { get; set; }
 }

@@ -2,6 +2,10 @@ using easyCloud.Quote.Domain.Repositories;
 using easyCloud.Quote.Domain.Services;
 using easyCloud.Quote.Persistence.Repositories;
 using easyCloud.Quote.Services;
+using easyCloud.Record.Domain.Repositories;
+using easyCloud.Record.Domain.Services;
+using easyCloud.Record.Persistence.Repositories;
+using easyCloud.Record.Services;
 using easyCloud.User.Domain.Repositories;
 using easyCloud.User.Domain.Services;
 using easyCloud.User.Persistence.Repositories;
@@ -21,6 +25,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IQuoteRepository, QuoteRepository>();
 builder.Services.AddScoped<IQuoteService, QuoteService>();
+builder.Services.AddScoped<IRecordService, RecordService>();
+builder.Services.AddScoped<IRecordRepository, RecordRepository>();
 
 var app = builder.Build();
 
