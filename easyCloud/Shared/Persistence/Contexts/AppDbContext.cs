@@ -40,5 +40,12 @@ public class AppDbContext : DbContext
         builder.Entity<Quote.Domain.Models.Quote>().Property(p => p.CloudService).IsRequired().HasMaxLength(20);
         builder.Entity<Quote.Domain.Models.Quote>().Property(p => p.Title).IsRequired().HasMaxLength(20);
         builder.Entity<Quote.Domain.Models.Quote>().Property(p => p.UserId).IsRequired();
+        builder.Entity<Record.Domain.Models.Record>().ToTable("Records");
+        builder.Entity<Record.Domain.Models.Record>().HasKey(p => p.Id);
+        builder.Entity<Record.Domain.Models.Record>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd();
+        
+        builder.Entity<Record.Domain.Models.Record>().Property(p => p.ProviderId).IsRequired();
+        builder.Entity<Record.Domain.Models.Record>().Property(p => p.QuoteId).IsRequired();
+        builder.Entity<Record.Domain.Models.Record>().Property(p => p.UserId).IsRequired();
     }
 }
