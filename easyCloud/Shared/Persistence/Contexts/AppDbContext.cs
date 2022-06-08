@@ -7,7 +7,7 @@ public class AppDbContext : DbContext
     public DbSet<User.Domain.Models.User> Users { get; set; }
     public DbSet<Record.Domain.Models.Record> Records { get; set; }
     public DbSet<Quote.Domain.Models.Quote> Quotes { get; set; }
-    
+    public DbSet<Provider.Domain.Models.Provider> Providers { get; set; }
     private readonly IConfiguration _configuration;
         
     public AppDbContext(DbContextOptions options, IConfiguration configuration) : base(options)
@@ -47,5 +47,10 @@ public class AppDbContext : DbContext
         builder.Entity<Record.Domain.Models.Record>().Property(p => p.ProviderId).IsRequired();
         builder.Entity<Record.Domain.Models.Record>().Property(p => p.QuoteId).IsRequired();
         builder.Entity<Record.Domain.Models.Record>().Property(p => p.UserId).IsRequired();
+        
+        builder.Entity<Provider.Domain.Models.Provider>().ToTable("Providers");
+        builder.Entity<Provider.Domain.Models.Provider>().Property(p=>p.Id).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<Provider.Domain.Models.Provider>().Property(p => p.Name).IsRequired().HasMaxLength(30);
+        builder.Entity<Provider.Domain.Models.Provider>().Property(p => p.Website).IsRequired();
     }
 }
