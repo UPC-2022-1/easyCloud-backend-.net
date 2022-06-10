@@ -48,4 +48,8 @@ public class QuoteRepository :BaseRepository, IQuoteRepository
     {
         return await _context.Quotes.SingleOrDefaultAsync(p => p.Title == title);
     }
+
 }
+
+
+
