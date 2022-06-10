@@ -8,4 +8,6 @@ public interface IQuoteService
     Task<QuoteResponse> SaveAsync(Models.Quote quote);
     Task<QuoteResponse> UpdateAsync(int quoteId, Models.Quote quote);
     Task<QuoteResponse> DeleteAsync(int quoteId);
+    Task<QuoteResponse> FindByDateAsync(string date);
+    Task<QuoteResponse> FindByTitleAsync(string title);
 }

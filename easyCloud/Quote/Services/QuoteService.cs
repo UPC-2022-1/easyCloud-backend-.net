@@ -81,4 +81,24 @@ public class QuoteService : IQuoteService
             return new QuoteResponse($"An error occurred while deleting the quote: {e.Message}");
         }
     }
+
+    public async Task<QuoteResponse> FindByDateAsync(string date)
+    {
+        var existingQuote = await _quoteRepository.FindByDateAsync(date);
+
+        if (existingQuote == null)
+            return new QuoteResponse("Invalid date");
+
+        return new QuoteResponse(existingQuote);
+    }
+
+    public async Task<QuoteResponse> FindByTitleAsync(string title)
+    {
+        var existingTitle = await _quoteRepository.FindByTitleAsync(title);
+
+        if (existingTitle == null)
+            return new QuoteResponse("Invalid title");
+
+        return new QuoteResponse(existingTitle);
+    }
 }
