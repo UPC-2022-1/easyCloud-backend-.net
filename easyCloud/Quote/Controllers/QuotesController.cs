@@ -1,9 +1,12 @@
 using AutoMapper;
 using easyCloud.Quote.Domain.Services;
 using easyCloud.Quote.Resources;
+using easyCloud.Shared.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace easyCloud.Quote.Controllers;
+[Produces("application/json")]
+[ApiController]
 [Route("/api/v1/[controller]")]
 
 public class QuotesController: ControllerBase
@@ -19,6 +22,7 @@ public class QuotesController: ControllerBase
     }
 
     [HttpGet]
+    [Route("test")]
     public async Task<IEnumerable<QuoteResource>> GetAllAsync()
     {
         var quotes = await _quoteService.ListAsync();
@@ -26,4 +30,24 @@ public class QuotesController: ControllerBase
 
         return resources;
     }
+    
+   
+    [HttpPost("add/{userId}")]
+    public async Task<IActionResult> PostAsync([FromBody] SaveQuoteResource resource, int userId)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState.GetErrorMessages());
+
+        var quote = _mapper.Map<SaveQuoteResource, Domain.Models.Quote>(resource);
+        quote.UserId = userId;
+        var result = await _quoteService.SaveAsync(quote);
+
+        if (!result.Success)
+            return BadRequest(result.Message);
+
+        var quoteResource = _mapper.Map<Domain.Models.Quote, QuoteResource>(result.Resource);
+
+        return Ok(quoteResource);
+    }
+   
 }
