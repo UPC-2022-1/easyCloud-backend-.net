@@ -1,7 +1,9 @@
 using AutoMapper;
+using easyCloud.Security.Domain.Services.Communication;
 using easyCloud.Shared.Extensions;
 using easyCloud.User.Domain.Services;
 using easyCloud.User.Resources;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace easyCloud.User.Controllers;
@@ -21,6 +23,22 @@ public class UsersController: ControllerBase
         _mapper = mapper;
     }
 
+    [AllowAnonymous]
+    [HttpPost("/auth/sign-in")]
+    public async Task<IActionResult> Authenticate(AuthenticateRequest request)
+    {
+        var response = await _userService.Authenticate(request);
+        return Ok(response);
+    }
+    
+    [AllowAnonymous]
+    [HttpPost("/auth/sign-up")]
+    public async Task<IActionResult> Register(RegisterRequest request)
+    {
+        await _userService.RegisterAsync(request);
+        return Ok(new {message = "Registration successful."});
+    }
+    
     [HttpGet]
     public async Task<IEnumerable<UserResource>> GetAllAsync()
     {
@@ -42,52 +60,25 @@ public class UsersController: ControllerBase
         return Ok(resources);
     }
     
-    [HttpPost]
-    public async Task<IActionResult> PostAsync([FromBody] SaveUserResource resource)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState.GetErrorMessages());
-
-        var user = _mapper.Map<SaveUserResource, Domain.Models.User>(resource);
-
-        var result = await _userService.SaveAsync(user);
-
-        if (!result.Success)
-            return BadRequest(result.Message);
-
-        var userResource = _mapper.Map<Domain.Models.User, UserResource>(result.Resource);
-
-        return Ok(userResource);
+        var user = await _userService.GetByIdAsync(id);
+        var resource = _mapper.Map<Domain.Models.User, UserResource>(user);
+        return Ok(resource);
     }
     
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutAsync(int id, [FromBody] SaveUserResource resource)
+    public async Task<IActionResult> Update(int id, UpdateRequest request)
     {
-        if(!ModelState.IsValid)
-            return BadRequest(ModelState.GetErrorMessages());
-
-        var user = _mapper.Map<SaveUserResource, Domain.Models.User>(resource);
-
-        var result = await _userService.UpdateAsync(id, user);
-
-        if (!result.Success)
-            return BadRequest(result.Message);
-
-        var userResource = _mapper.Map<Domain.Models.User, UserResource>(result.Resource);
-
-        return Ok(userResource);
+        await _userService.UpdateAsync(id, request);
+        return Ok(new {message = "User Updated Successfully."});
     }
-        
+    
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteAsync(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        var result = await _userService.DeleteAsync(id);
-
-        if (!result.Success)
-            return BadRequest(result.Message);
-
-        var userResource = _mapper.Map<Domain.Models.User, UserResource>(result.Resource);
-
-        return Ok(userResource);
+        await _userService.DeleteAsync(id);
+        return Ok(new {message = "User Deleted successfully."});
     }
 }
