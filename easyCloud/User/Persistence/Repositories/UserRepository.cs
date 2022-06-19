@@ -33,6 +33,11 @@ public class UserRepository : BaseRepository, IUserRepository
         return await _context.Users.SingleOrDefaultAsync(p => p.Email == email);
     }
 
+    public Domain.Models.User FindById(int userId)
+    {
+        return _context.Users.Find(userId);
+    }
+
     public bool ExistByEmail(string email)
     {
         return _context.Users.Any(p => p.Email == email);
