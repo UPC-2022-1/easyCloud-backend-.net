@@ -7,7 +7,6 @@ public interface IUserService
 {
     public Task<AuthenticateResponse> Authenticate(AuthenticateRequest request);
     Task<IEnumerable<Models.User>> ListAsync();
-    Task<UserResponse> FindByEmailAsync(string email);
     Task<Domain.Models.User> GetByIdAsync(int userId);
     Task RegisterAsync(RegisterRequest request);
     Task UpdateAsync(int userId, UpdateRequest user);
