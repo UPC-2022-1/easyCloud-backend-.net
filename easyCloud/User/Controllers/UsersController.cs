@@ -48,18 +48,6 @@ public class UsersController: ControllerBase
         return resources;
     }
     
-    [HttpGet("{email}")]
-    public async Task<IActionResult> GetByEmail(string email)
-    {
-        var user = await _userService.FindByEmailAsync(email);
-            
-        if (!user.Success)
-            return BadRequest(user.Message);
-            
-        var resources = _mapper.Map<Domain.Models.User, UserResource>(user.Resource);
-        return Ok(resources);
-    }
-    
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {

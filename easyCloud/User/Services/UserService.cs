@@ -53,16 +53,6 @@ public async Task<IEnumerable<Domain.Models.User>> ListAsync()
         return await _userRepository.ListAsync();
     }
 
-    public async Task<UserResponse> FindByEmailAsync(string email)
-    {
-        var existingUser = await _userRepository.FindByEmailAsync(email);
-
-        if (existingUser == null)
-            return new UserResponse("Invalid email");
-
-        return new UserResponse(existingUser);
-    }
-
     public async Task<Domain.Models.User> GetByIdAsync(int userId)
     {
         var user = await _userRepository.FindByIdAsync(userId);
