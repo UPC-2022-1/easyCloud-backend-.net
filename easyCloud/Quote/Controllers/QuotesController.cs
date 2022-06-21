@@ -1,6 +1,7 @@
 using AutoMapper;
 using easyCloud.Quote.Domain.Services;
 using easyCloud.Quote.Resources;
+using easyCloud.Record.Resources;
 using easyCloud.Shared.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -49,5 +50,17 @@ public class QuotesController: ControllerBase
 
         return Ok(quoteResource);
     }
-   
+
+    [HttpDelete("delete/{id}")]
+    public async Task<IActionResult> DeleteAsync(int id)
+    {
+        var result = await _quoteService.DeleteAsync(id);
+
+        if (!result.Success)
+            return BadRequest(result.Message);
+
+        var quoteResource = _mapper.Map<Domain.Models.Quote, QuoteResource>(result.Resource);
+
+        return Ok(quoteResource);
+    }
 }
