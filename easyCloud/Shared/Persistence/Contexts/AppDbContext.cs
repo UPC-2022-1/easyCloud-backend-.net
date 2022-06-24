@@ -32,7 +32,7 @@ public class AppDbContext : DbContext
         builder.Entity<User.Domain.Models.User>().Property(p => p.Name).IsRequired().HasMaxLength(30);
         builder.Entity<User.Domain.Models.User>().Property(p => p.Phone).IsRequired();
         builder.Entity<User.Domain.Models.User>().Property(p => p.Email).IsRequired().HasMaxLength(60);
-        builder.Entity<User.Domain.Models.User>().Property(p => p.Password).IsRequired().HasMaxLength(30);
+
         builder.Entity<Quote.Domain.Models.Quote>().ToTable("Quotes");
         builder.Entity<Quote.Domain.Models.Quote>().HasKey(p => p.Id);
         builder.Entity<Quote.Domain.Models.Quote>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd();
@@ -42,10 +42,10 @@ public class AppDbContext : DbContext
         builder.Entity<Quote.Domain.Models.Quote>().Property(p => p.CloudService).IsRequired().HasMaxLength(20);
         builder.Entity<Quote.Domain.Models.Quote>().Property(p => p.Title).IsRequired().HasMaxLength(20);
         builder.Entity<Quote.Domain.Models.Quote>().Property(p => p.UserId).IsRequired();
+        
         builder.Entity<Record.Domain.Models.Record>().ToTable("Records");
         builder.Entity<Record.Domain.Models.Record>().HasKey(p => p.Id);
         builder.Entity<Record.Domain.Models.Record>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd();
-        
         builder.Entity<Record.Domain.Models.Record>().Property(p => p.ProviderId).IsRequired();
         builder.Entity<Record.Domain.Models.Record>().Property(p => p.QuoteId).IsRequired();
         builder.Entity<Record.Domain.Models.Record>().Property(p => p.UserId).IsRequired();

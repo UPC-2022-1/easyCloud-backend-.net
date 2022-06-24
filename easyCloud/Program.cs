@@ -10,6 +10,10 @@ using easyCloud.Record.Domain.Repositories;
 using easyCloud.Record.Domain.Services;
 using easyCloud.Record.Persistence.Repositories;
 using easyCloud.Record.Services;
+using easyCloud.Security.Authorization.Handlers.Implementations;
+using easyCloud.Security.Authorization.Handlers.Interfaces;
+using easyCloud.Security.Authorization.Middleware;
+using easyCloud.Security.Authorization.Settings;
 using easyCloud.Shared.Domain.Repositories;
 using easyCloud.Shared.Mapping;
 using easyCloud.Shared.Persistence.Contexts;
@@ -39,7 +43,13 @@ builder.Services.AddCors(options =>
 // Add services to the container.
  
 builder.Services.AddControllers();
- 
+
+//Add CORS Service
+builder.Services.AddCors();
+
+ //App settings configuration
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -63,6 +73,23 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
     options.EnableAnnotations();
+    /*options.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme(
+    {
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        Description = "JWT Authorization header using the Bearer scheme."
+    });
+    options.AddSecurityDefinition(new OpenApiSecurityRequirement(
+    {
+        {
+            new OpenApiSecurityScheme()
+            {
+                Reference = new OpenApiReference{Type = ReferenceType.SecurityScheme, Id = "bearerAuth"}
+            },
+            Array.Empty<string>()
+        }  
+    });*/
 });
  
 // Add Database Connection
@@ -83,15 +110,13 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddSwaggerGen();
 
-
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IQuoteRepository, QuoteRepository>();
 builder.Services.AddScoped<IQuoteService, QuoteService>();
 builder.Services.AddScoped<IRecordService, RecordService>();
 builder.Services.AddScoped<IRecordRepository, RecordRepository>();
 builder.Services.AddScoped<IProviderRepository, ProviderRepository>();
 builder.Services.AddScoped<IProviderService, ProviderService>();
+builder.Services.AddScoped<IJwtHandler, JwtHandler>();
 
 //automapper
 builder.Services.AddAutoMapper(typeof(ModelToResourceProfile),typeof(ResourceToModelProfile));
@@ -115,10 +140,22 @@ if (app.Environment.IsDevelopment())
         options.RoutePrefix = "swagger";
     });
 }
- 
+    
 app.UseHttpsRedirection();
  
-app.UseCors(MyAllowSpecificOrigins);
+//Configure CORS
+app.UseCors(x=>x
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
+
+//Middleware services configuration
+
+//Configure Error Handler Middleware
+app.UseMiddleware<ErrorHandlerMiddleware>();
+
+//Configure JSON web Token Handling Middleware
+app.UseMiddleware<JwtMiddleware>();
 
 app.UseAuthorization();
  
