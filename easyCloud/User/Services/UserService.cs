@@ -69,7 +69,6 @@ public class UserService : IUserService
         // Map Request to User Entity
         var user = _mapper.Map<Domain.Models.User>(request);
 
-        // Hash Password
         user.Password = BCryptNet.HashPassword(request.Password);
 
         // Save User
@@ -91,7 +90,6 @@ public class UserService : IUserService
 
         if (!string.IsNullOrEmpty(user.Password))
             existingUser.Password = BCryptNet.HashPassword(user.Password);
-
         _mapper.Map(user, existingUser);
 
         try
