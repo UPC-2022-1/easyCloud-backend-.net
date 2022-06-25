@@ -29,10 +29,10 @@ public class UserService : IUserService
     {
         var user = await _userRepository.FindByEmailAsync(request.Email);
         Console.WriteLine($"Request: {request.Email}, {request.Password}");
-        Console.WriteLine($"User: {user.Id}, {user.Email}, {user.Name}, {user.Phone}, {user.PasswordHash}");
+        Console.WriteLine($"User: {user.Id}, {user.Email}, {user.Name}, {user.Phone}, {user.Password}");
 
         // Validate
-        if (user == null || !BCryptNet.Verify(request.Password, user.PasswordHash))
+        if (user == null || !BCryptNet.Verify(request.Password, user.Password))
         {
             Console.WriteLine("Authentication Error");
             throw new AppException("Username of password is incorrect");
@@ -70,7 +70,7 @@ public class UserService : IUserService
         var user = _mapper.Map<Domain.Models.User>(request);
 
         // Hash Password
-        user.PasswordHash = BCryptNet.HashPassword(request.Password);
+        user.Password = BCryptNet.HashPassword(request.Password);
 
         // Save User
 
@@ -90,7 +90,7 @@ public class UserService : IUserService
         var existingUser = GetById(userId);
 
         if (!string.IsNullOrEmpty(user.Password))
-            existingUser.PasswordHash = BCryptNet.HashPassword(user.Password);
+            existingUser.Password = BCryptNet.HashPassword(user.Password);
 
         _mapper.Map(user, existingUser);
 
