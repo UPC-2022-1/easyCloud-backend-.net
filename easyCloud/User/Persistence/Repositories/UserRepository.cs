@@ -13,8 +13,7 @@ public class UserRepository : BaseRepository, IUserRepository
 
     public async Task<IEnumerable<Domain.Models.User>> ListAsync()
     {
-        return await _context.Users
-            .ToListAsync();
+        return await _context.Users.ToListAsync();
     }
 
     public async Task AddAsync(Domain.Models.User user)
@@ -24,10 +23,9 @@ public class UserRepository : BaseRepository, IUserRepository
 
     public async Task<Domain.Models.User> FindByIdAsync(int userId)
     {
-        return await _context.Users
-            .FirstOrDefaultAsync(p => p.Id == userId);
+        return await _context.Users.FirstOrDefaultAsync(p => p.Id == userId);
     }
-
+    
     public async Task<Domain.Models.User> FindByEmailAsync(string email)
     {
         return await _context.Users.SingleOrDefaultAsync(p => p.Email == email);

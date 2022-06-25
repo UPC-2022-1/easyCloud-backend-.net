@@ -1,6 +1,5 @@
 using AutoMapper;
 using easyCloud.Security.Domain.Services.Communication;
-using easyCloud.Shared.Extensions;
 using easyCloud.User.Domain.Services;
 using easyCloud.User.Resources;
 using Microsoft.AspNetCore.Authorization;
@@ -22,23 +21,23 @@ public class UsersController: ControllerBase
         _userService = userService;
         _mapper = mapper;
     }
-
-    [AllowAnonymous]
-    [HttpPost("/auth/sign-in")]
-    public async Task<IActionResult> Authenticate(AuthenticateRequest request)
-    {
-        var response = await _userService.Authenticate(request);
-        return Ok(response);
-    }
     
     [AllowAnonymous]
-    [HttpPost("/auth/sign-up")]
+    [HttpPost("auth/sign-up")]
     public async Task<IActionResult> Register(RegisterRequest request)
     {
         await _userService.RegisterAsync(request);
         return Ok(new {message = "Registration successful."});
     }
-    
+
+    [AllowAnonymous]
+    [HttpPost("auth/sign-in")]
+    public async Task<IActionResult> Authenticate(AuthenticateRequest request)
+    {
+        var response = await _userService.Authenticate(request);
+        return Ok(response);
+    }
+
     [HttpGet]
     public async Task<IEnumerable<UserResource>> GetAllAsync()
     {
