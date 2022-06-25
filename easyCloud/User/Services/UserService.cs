@@ -17,7 +17,7 @@ public class UserService : IUserService
     private readonly IMapper _mapper;
     private readonly IJwtHandler _jwtHandler;
 
-public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork, IMapper mapper, IJwtHandler jwtHandler)
+    public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork, IMapper mapper, IJwtHandler jwtHandler)
     {
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
@@ -25,30 +25,30 @@ public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork, IMapp
         _jwtHandler = jwtHandler;
     }
 
-public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest request)
-{
-    var user = await _userRepository.FindByEmailAsync(request.Email);
-    Console.WriteLine($"Request: {request.Email}, {request.Password}");
-    Console.WriteLine($"User: {user.Id}, {user.Email}, {user.Name}, {user.Phone}, {user.Password}");
-        
-    // Validate
-    if (user == null || !BCryptNet.Verify(request.Password, user.Password))
+    public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest request)
     {
-        Console.WriteLine("Authentication Error");
-        throw new AppException("Username of password is incorrect");
-    }
-        
-    Console.WriteLine("Authentication successful. About to generate token");
-        
-    //Authentication successful
-    var response = _mapper.Map<AuthenticateResponse>(user);
-    Console.WriteLine($"Response: {response.Id}, {response.Id}, {response.Name}, {response.Email}");
-    response.Token = _jwtHandler.GenerateToken(user);
-    Console.WriteLine($"Generated Token is {response.Token}");
-    return response;
-}
+        var user = await _userRepository.FindByEmailAsync(request.Email);
+        Console.WriteLine($"Request: {request.Email}, {request.Password}");
+        Console.WriteLine($"User: {user.Id}, {user.Email}, {user.Name}, {user.Phone}, {user.Password}");
 
-public async Task<IEnumerable<Domain.Models.User>> ListAsync()
+        // Validate
+        if (user == null || !BCryptNet.Verify(request.Password, user.Password))
+        {
+            Console.WriteLine("Authentication Error");
+            throw new AppException("Username of password is incorrect");
+        }
+
+        Console.WriteLine("Authentication successful. About to generate token");
+
+        //Authentication successful
+        var response = _mapper.Map<AuthenticateResponse>(user);
+        Console.WriteLine($"Response: {response.Id}, {response.Name}, {response.Email}");
+        response.Token = _jwtHandler.GenerateToken(user);
+        Console.WriteLine($"Generated Token is {response.Token}");
+        return response;
+    }
+
+    public async Task<IEnumerable<Domain.Models.User>> ListAsync()
     {
         return await _userRepository.ListAsync();
     }
@@ -64,14 +64,14 @@ public async Task<IEnumerable<Domain.Models.User>> ListAsync()
     {
         // Validate 
         if (_userRepository.ExistByEmail(request.Email))
-            throw new AppException($"Username '{request.Email}' is already taken");
-        
+            throw new AppException($"Email '{request.Email}' is already taken");
+
         // Map Request to User Entity
         var user = _mapper.Map<Domain.Models.User>(request);
-        
+
         // Hash Password
         user.Password = BCryptNet.HashPassword(request.Password);
-        
+
         // Save User
 
         try
@@ -88,12 +88,12 @@ public async Task<IEnumerable<Domain.Models.User>> ListAsync()
     public async Task UpdateAsync(int userId, UpdateRequest user)
     {
         var existingUser = GetById(userId);
-        
+
         if (!string.IsNullOrEmpty(user.Password))
             existingUser.Password = BCryptNet.HashPassword(user.Password);
-            
+
         _mapper.Map(user, existingUser);
-            
+
         try
         {
             _userRepository.Update(existingUser);
@@ -108,7 +108,7 @@ public async Task<IEnumerable<Domain.Models.User>> ListAsync()
     public async Task DeleteAsync(int userId)
     {
         var user = GetById(userId);
-            
+
         try
         {
             _userRepository.Remove(user);
@@ -119,7 +119,7 @@ public async Task<IEnumerable<Domain.Models.User>> ListAsync()
             throw new AppException($"An error occurred while deleting the user: {e.Message}");
         }
     }
-    
+
     private Domain.Models.User GetById(int id)
     {
         var user = _userRepository.FindById(id);
